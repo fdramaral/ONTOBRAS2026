@@ -1,0 +1,19 @@
+# ---------------------------------------------------------------------------
+# Q4 — Truthmakers ativos por classificação ontológica.
+# Primeira etapa do ontological unpacking: recuperação do conjunto de
+# truthmakers que fundamentam a proposição de viabilidade do contexto.
+# ---------------------------------------------------------------------------
+SELECT ?kind ?truthmaker ?symbol ?label ?value ?unit ?derived ?source WHERE {
+  ?tmset a cover:TruthmakerSet ;
+         side:hasContext side:RioGrandeDoNorte_2025 ;
+         cover:hasMember ?truthmaker .
+  ?truthmaker a ?kind ;
+              side:hasSymbol ?symbol ;
+              rdfs:label ?label ;
+              cover:hasValue ?value ;
+              cover:hasUnit ?unit ;
+              side:isDerived ?derived ;
+              side:hasSourceCitation ?source .
+  FILTER(?kind IN (side:TechnicalTruthmaker, side:EconomicTruthmaker, side:SpatialTruthmaker))
+}
+ORDER BY ?kind ?symbol

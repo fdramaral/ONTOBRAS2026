@@ -1,0 +1,18 @@
+# ---------------------------------------------------------------------------
+# Q5 — QC3 (condicional):
+# "Sob quais condições BESS torna-se Preferred Bearer?"
+# Recupera as vulnerabilidades do BESS e os truthmakers econômicos cuja
+# alteração as desativa (LowPLDArbitrageVulnerability / LCOS vs. PLD).
+# ---------------------------------------------------------------------------
+SELECT ?vulnerability ?isActive ?symbol ?value ?unit WHERE {
+  ?s a side:BESSStrategy ;
+     cover:hasVulnerability ?vulnerability .
+  ?vulnerability side:isActive ?isActive .
+  ?tmset cover:hasMember ?tm .
+  ?tm a side:EconomicTruthmaker ;
+      side:hasSymbol ?symbol ;
+      cover:hasValue ?value ;
+      cover:hasUnit ?unit .
+  FILTER(?symbol IN ("LCOS", "PLD"))
+}
+ORDER BY ?vulnerability ?symbol
