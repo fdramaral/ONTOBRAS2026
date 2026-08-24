@@ -1,0 +1,233 @@
+
+==============================================================================
+1. TRUTHMAKERS INSTANCIADOS (Tabela 2)
+==============================================================================
+
+  [Technical]
+        C_inst =  11,700.0000 MW             Capacidade instalada eólica + solar
+        E_coff =  18,442.0000 GWh            Constrained-off eólico acumulado (24 meses)
+            FC =       0.5950 adimensional   Fator de capacidade de constrained-off
+             P =   1,000.0000 MW             Capacidade sugerida do ativo
+         P_med =   1,847.0000 MWmed          Potência média nas horas com corte
+             h =   5,212.2000 h/ano          Horas de operação ativas por ano (derivado)
+      n_ciclos =   1,303.0000 ciclos/ano     Ciclos completos por ano do BESS (derivado)
+          η_RT =       0.9000 adimensional   Eficiência round-trip do BESS
+        η_impl =       0.7505 adimensional   Eficiência implícita do stack (HHV/κ) (derivado)
+             κ =      52.5000 kWh/kgH2       Consumo específico do eletrolisador AWE
+
+  [Economic]
+     CAPEX_AWE =     850.0000 USD/kW         CAPEX unitário do eletrolisador
+    CAPEX_BESS =     320.0000 USD/kWh        CAPEX unitário do BESS
+           FCR =       0.1468 adimensional   Fixed charge rate (WACC=12%, n=20) (derivado)
+          LCOH =       1.9500 USD/kgH2       Custo nivelado do hidrogênio (cenário S1)
+          LCOS =     145.0000 USD/MWh        Custo nivelado de armazenamento em alta ciclagem
+           PLD =      92.0000 USD/MWh        Benefício unitário de arbitragem
+          P_H2 =       2.5000 USD/kgH2       Paridade com o H2 cinza
+          WACC =       0.1200 adimensional   Custo médio ponderado de capital
+
+  [Spatial]
+       I_porto =       0.0000 booleano       Disponibilidade de infraestrutura portuária de H2
+         c_log =       0.0000 USD/kgH2       Custo logístico unitário de escoamento do H2
+       d_porto =     250.0000 km             Distância ao porto de exportação (Pecém/CE)
+
+==============================================================================
+2. CÁLCULO DO VUAV (Tabela 4)
+==============================================================================
+  VUAV(s,ctx) = Σᵢ [L(GEᵢ|ctx) × I(GEᵢ)] − Σⱼ [L(LEⱼ|s,ctx) × S(LEⱼ)]
+
+  H₂V   PreferredBearer
+      + L=1.00 ×     248.2 M =     248.2 M   [ge_h2_production]
+      − L=1.00 ×     193.6 M =    -193.6 M   [le_electrolyzer_cost]
+      VUAV = USD 54.6 M/ano
+
+  NI    DeprecatedBearer
+      + L=0.60 ×      25.0 M =      15.0 M   [ge_techlockin_avoidance]
+      + L=1.00 ×     102.0 M =     102.0 M   [ge_capex_preservation]
+      + L=0.50 ×      15.0 M =       7.5 M   [ge_regulatory_avoidance]
+      − L=0.30 ×     248.2 M =     -74.5 M   [le_revenue_opportunity]
+      VUAV = USD 50.0 M/ano
+
+  BESS  DeprecatedBearer
+      + L=1.00 ×     431.6 M =     431.6 M   [ge_arbitrage]
+      − L=1.00 ×     680.2 M =    -680.2 M   [le_battery_degradation]
+      VUAV = USD -248.6 M/ano
+
+  Ordenação: VUAV(H₂V) > VUAV(NI) > VUAV(BESS)
+
+==============================================================================
+3. ONTOLOGICAL UNPACKING — cadeia Vulnerability → Loss Event → Intention
+==============================================================================
+  BESS: vul_high_cycling
+      → le_battery_degradation → int_low_cost
+          fundamentado em CAPEX_BESS = 320 USD/kWh
+          fundamentado em LCOS = 145 USD/MWh
+          fundamentado em n_ciclos = 1303 ciclos/ano
+  H₂V: vul_capex_intensity
+      → le_electrolyzer_cost → int_low_cost
+          fundamentado em CAPEX_AWE = 850 USD/kW
+          fundamentado em LCOH = 1.95 USD/kgH2
+          fundamentado em κ = 52.5 kWh/kgH2
+  NI: vul_opportunity_cost
+      → le_revenue_opportunity → int_high_revenue
+          fundamentado em E_coff = 18442 GWh
+          fundamentado em FC = 0.595 adimensional
+          fundamentado em h = 5212.2 h/ano
+
+  Explicação gerada:
+
+    H₂V é a Preferred Bearer porque:
+      (1) o ge_h2_production contribui +USD 248.2 M/ano com L=1.00
+      (2) NI: le_revenue_opportunity impõe +USD 74.5 M/ano, resultando em VUAV = +USD 50.0 M/ano
+      (3) BESS: le_battery_degradation impõe +USD 680.2 M/ano, resultando em VUAV = −USD 248.6 M/ano
+
+  Ano em que VUAV(NI) se torna negativo: 5
+
+==============================================================================
+4. QUESTÕES DE COMPETÊNCIA
+==============================================================================
+
+  --- QC1 ---
+  Preferred Bearer: H₂V (VUAV = +USD 54.6 M/ano)
+  Cadeia de fundamentação:
+    cap_h2_production → ge_h2_production → int_high_revenue
+        truthmaker FC = 0.595 adimensional
+        truthmaker P = 1000 MW
+        truthmaker P_H2 = 2.5 USD/kgH2
+        truthmaker h = 5212.2 h/ano
+        truthmaker κ = 52.5 kWh/kgH2
+
+  --- QC2 ---
+  Limiares de reversão da preferência sobre H₂V (critério: vuav_ranking):
+    • CAPEX_AWE ≥ 865.91 USD/kW (base: 850.00) → Preferred Bearer passa a ser rn_ni_strategy
+        mecanismo: LCOH ultrapassa a paridade com o H₂ cinza; o H2ProductionGain converte-se em Loss e o CapexPreservationGain de NI passa a dominar
+    • FC ≤ 0.58 adimensional (base: 0.59) → Preferred Bearer passa a ser rn_ni_strategy
+        mecanismo: IntermittentCurtailmentVulnerability manifesta-se: as horas ativas caem, o LCOH sobe e o H2ProductionGain desaparece
+    • c_log ≥ 0.05 USD/kgH2 (base: 0.00) → Preferred Bearer passa a ser rn_ni_strategy
+        mecanismo: LogisticsDistanceVulnerability manifesta-se; o LogisticsLoss elimina a margem de H₂V
+
+  --- QC3 ---
+  Condições de ativação plena da EnergyArbitrageCapability (critério: vuav_ranking):
+    • PLD ≥ 156.64 USD/MWh (base: 92.00) → Preferred Bearer passa a ser rn_bess_strategy
+        mecanismo: LowPLDArbitrageVulnerability é desativada e a EnergyArbitrageCapability manifesta-se plenamente
+    • LCOS ≤ 80.36 USD/MWh (base: 145.00) → Preferred Bearer passa a ser rn_bess_strategy
+        mecanismo: HighCyclingDegradationVulnerability é mitigada; o BatteryDegradationLoss recua abaixo do ArbitrageGain
+  Estado das vulnerabilidades do BESS no contexto-base:
+    vul_high_cycling                           ativa=true  | LCOS = 145 USD/MWh
+    vul_high_cycling                           ativa=true  | PLD = 92 USD/MWh
+    vul_low_pld_arbitrage                      ativa=true  | LCOS = 145 USD/MWh
+    vul_low_pld_arbitrage                      ativa=true  | PLD = 92 USD/MWh
+
+==============================================================================
+5. ANÁLISE DE SENSIBILIDADE ONTOLÓGICA (Tabela 5)
+==============================================================================
+  Cenário                          LCOH  Preferred  VUAV (USD M/ano)
+  Base (RN 2025)                   1.95  H₂V        H₂V=+54.6  NI=+50.0  BESS=-248.6
+  CAPEX AWE alto                   2.52  NI         NI=+90.8  H₂V=-2.1  BESS=-248.6
+  LCOH com logística               2.50  NI         NI=+50.0  H₂V=-0.0  BESS=-248.6
+  LCOS BESS cai (~2030)            1.95  H₂V        H₂V=+54.6  NI=+50.0  BESS=+0.0
+  FC reduzido (PDE 2035)           3.02  NI         NI=+82.0  H₂V=-29.6  BESS=-142.1
+  PLD alto (escassez hídrica)      1.95  BESS       BESS=+258.0  H₂V=+54.6  NI=+50.0
+
+==============================================================================
+6. CONSISTÊNCIA LÓGICA (HermiT)
+==============================================================================
+  classes         : 89
+  individuals     : 68
+  properties      : 35
+  consistent      : True
+  unsatisfiable   : []
+  reasoner        : HermiT
+  error           : None
+
+  Refinamento de NoInvestmentStrategy (Seção 3.2):
+    found                       : True
+    insatisfazivel              : False
+    n_restricoes_existenciais   : 4
+      cover.hasCapability.some(side.FinancialFlexibilityCapability)
+      cover.hasCapability.some(side.TechLockInAvoidanceCapability)
+      cover.hasCapability.some(side.RegulatoryRiskAvoidanceCapability)
+      cover.hasVulnerability.some(side.OpportunityCostVulnerability)
+    n_instancias                : 1
+
+==============================================================================
+7. VALIDAÇÃO CONTRA OS VALORES PUBLICADOS
+==============================================================================
+  Grandeza                     publicado        obtido           Δ   status
+  horas_ativas_ano                 5,212         5,212         0.2   OK
+  ciclos_ano                       1,303         1,303        0.05   OK
+  producao_h2_t                 9.93e+04     9.928e+04         -20   OK
+  energia_bess_mwh             4.691e+06     4.691e+06         180   OK
+  eta_impl                          0.75        0.7505    0.000476   OK
+  receita_h2_musd                  248.2         248.2           0   OK
+  custo_h2_musd                    193.6         193.6      -0.004   OK
+  receita_bess_musd                431.6         431.6     -0.0298   OK
+  custo_bess_musd                  680.2         680.2     -0.0079   OK
+  vuav_h2v_musd                     54.6          54.6       0.004   OK
+  vuav_bess_musd                  -248.6        -248.6     -0.0219   OK
+  limiar_capex_usd_kw              1,190         1,177       -12.6   OK
+  limiar_clog_usd_kg                0.55          0.55           0   OK
+  limiar_pld_usd_mwh                 145           145           0   OK
+  limiar_lcos_usd_mwh                 92            92           0   OK
+  limiar_fc                         0.34        0.4296      0.0896   *** DIVERGE
+
+  15 reproduzidos dentro da tolerância, 1 divergentes.
+
+==============================================================================
+8. DIAGNÓSTICO DAS INCONSISTÊNCIAS DO ARTIGO
+==============================================================================
+{
+    "lcoh_tabela2_usd_kg": 1.95,
+    "lcoh_analitico_capex_opex_usd_kg": 1.4281,
+    "residual_delta_usd_kg": 0.5219,
+    "curva_fig10_em_fc_0595": 1.4281,
+    "fc_paridade": {
+        "curva_fig10_publicada": 0.34,
+        "analytic_residual": 0.4296,
+        "proportional": 0.4641
+    },
+    "capex_paridade_usd_kw": {
+        "publicado_tabela5": 1190.0,
+        "analytic_residual": 1177.36,
+        "proportional": 1089.74
+    },
+    "lcoh_em_capex_1190": {
+        "publicado_tabela5": 2.73,
+        "analytic_residual": 2.5212,
+        "proportional": 2.73
+    }
+}
+
+  Leitura:
+  • O LCOH da Tabela 2 (1,95) e a curva da Figura 10 avaliada no mesmo FC (1,43)
+    diferem em 0,52 USD/kg. A diferença é o componente residual não decomposto no
+    artigo (energia, reposição de stack, BOP), presente no LCOH do Monte Carlo do
+    SBPO e ausente da curva analítica CAPEX+OPEX.
+  • Em consequência, o limiar de FC é 34,0% pela curva publicada, 43,0% pelo
+    modelo analítico com residual e 46,4% pelo modelo proporcional. Os limiares de
+    CAPEX (1.190), c_log (0,55), PLD (145) e LCOS (92) da Tabela 5 são coerentes
+    com os dois últimos, não com o primeiro.
+  • Recomendação: adotar um único modelo de LCOH e recalcular a Figura 10 e a
+    Tabela 5 a partir dele.
+
+==============================================================================
+9. CRITÉRIO DE REVERSÃO — comparação
+==============================================================================
+  Os limiares publicados usam o critério de PARIDADE (VUAV da estratégia
+  cruza zero). O critério coerente com a definição de Preferred Bearer
+  adotada no artigo é a COMPARAÇÃO entre VUAV. Os dois só coincidem se o
+  VUAV das demais alternativas for aproximadamente nulo — o que depende
+  da calibração de NI, não publicada.
+
+  Truthmaker        paridade     comparação VUAV
+  CAPEX_AWE        1177.3622            865.9135
+  FC                  0.4296               0.585
+  c_log                 0.55              0.0461
+  PLD                  145.0            156.6403
+  LCOS                  92.0             80.3597
+
+==============================================================================
+10. EXPORTAÇÃO
+==============================================================================
+  out/side.owl  (107,722 bytes)
+  out/side_full.ttl  (45,083 bytes)
+  out/resultados.json  (8,226 bytes)

@@ -1,0 +1,310 @@
+{
+  "contexto": "RioGrandeDoNorte_2025",
+  "vuav_usd_ano": {
+    "H₂V": 54604000.0,
+    "NI": 50040000.0,
+    "BESS": -248621940.0
+  },
+  "preferred_bearer": "H₂V",
+  "deprecated_bearers": [
+    "NI",
+    "BESS"
+  ],
+  "ni_reversal_year": 5,
+  "contrafactuais_paridade": [
+    {
+      "truthmaker": "tm_capex_awe_850",
+      "symbol": "CAPEX_AWE",
+      "baseline": 850.0,
+      "threshold": 1177.3622,
+      "direction": "geq",
+      "unit": "USD/kW",
+      "new_preferred": "rn_ni_strategy",
+      "mechanism": "LCOH ultrapassa a paridade com o H₂ cinza; o H2ProductionGain converte-se em Loss e o CapexPreservationGain de NI passa a dominar"
+    },
+    {
+      "truthmaker": "tm_fc_595",
+      "symbol": "FC",
+      "baseline": 0.595,
+      "threshold": 0.4296,
+      "direction": "leq",
+      "unit": "adimensional",
+      "new_preferred": "rn_ni_strategy",
+      "mechanism": "IntermittentCurtailmentVulnerability manifesta-se: as horas ativas caem, o LCOH sobe e o H2ProductionGain desaparece"
+    },
+    {
+      "truthmaker": "tm_custo_logistico",
+      "symbol": "c_log",
+      "baseline": 0.0,
+      "threshold": 0.55,
+      "direction": "geq",
+      "unit": "USD/kgH2",
+      "new_preferred": "rn_ni_strategy",
+      "mechanism": "LogisticsDistanceVulnerability manifesta-se; o LogisticsLoss elimina a margem de H₂V"
+    },
+    {
+      "truthmaker": "tm_pld_arbitragem_92",
+      "symbol": "PLD",
+      "baseline": 92.0,
+      "threshold": 145.0,
+      "direction": "geq",
+      "unit": "USD/MWh",
+      "new_preferred": "rn_h2v_strategy",
+      "mechanism": "LowPLDArbitrageVulnerability é desativada e a EnergyArbitrageCapability manifesta-se plenamente"
+    },
+    {
+      "truthmaker": "tm_lcos_145",
+      "symbol": "LCOS",
+      "baseline": 145.0,
+      "threshold": 92.0,
+      "direction": "leq",
+      "unit": "USD/MWh",
+      "new_preferred": "rn_h2v_strategy",
+      "mechanism": "HighCyclingDegradationVulnerability é mitigada; o BatteryDegradationLoss recua abaixo do ArbitrageGain"
+    }
+  ],
+  "contrafactuais_comparacao": [
+    {
+      "truthmaker": "tm_capex_awe_850",
+      "symbol": "CAPEX_AWE",
+      "baseline": 850.0,
+      "threshold": 865.9135,
+      "direction": "geq",
+      "unit": "USD/kW",
+      "new_preferred": "rn_ni_strategy",
+      "mechanism": "LCOH ultrapassa a paridade com o H₂ cinza; o H2ProductionGain converte-se em Loss e o CapexPreservationGain de NI passa a dominar"
+    },
+    {
+      "truthmaker": "tm_fc_595",
+      "symbol": "FC",
+      "baseline": 0.595,
+      "threshold": 0.585,
+      "direction": "leq",
+      "unit": "adimensional",
+      "new_preferred": "rn_ni_strategy",
+      "mechanism": "IntermittentCurtailmentVulnerability manifesta-se: as horas ativas caem, o LCOH sobe e o H2ProductionGain desaparece"
+    },
+    {
+      "truthmaker": "tm_custo_logistico",
+      "symbol": "c_log",
+      "baseline": 0.0,
+      "threshold": 0.0461,
+      "direction": "geq",
+      "unit": "USD/kgH2",
+      "new_preferred": "rn_ni_strategy",
+      "mechanism": "LogisticsDistanceVulnerability manifesta-se; o LogisticsLoss elimina a margem de H₂V"
+    },
+    {
+      "truthmaker": "tm_pld_arbitragem_92",
+      "symbol": "PLD",
+      "baseline": 92.0,
+      "threshold": 156.6403,
+      "direction": "geq",
+      "unit": "USD/MWh",
+      "new_preferred": "rn_bess_strategy",
+      "mechanism": "LowPLDArbitrageVulnerability é desativada e a EnergyArbitrageCapability manifesta-se plenamente"
+    },
+    {
+      "truthmaker": "tm_lcos_145",
+      "symbol": "LCOS",
+      "baseline": 145.0,
+      "threshold": 80.3597,
+      "direction": "leq",
+      "unit": "USD/MWh",
+      "new_preferred": "rn_bess_strategy",
+      "mechanism": "HighCyclingDegradationVulnerability é mitigada; o BatteryDegradationLoss recua abaixo do ArbitrageGain"
+    }
+  ],
+  "sensibilidade": [
+    {
+      "cenario": "Base (RN 2025)",
+      "alteracao": "—",
+      "lcoh": 1.95,
+      "preferred": "H₂V",
+      "vuav": {
+        "H₂V": 54.6,
+        "NI": 50.0,
+        "BESS": -248.6
+      }
+    },
+    {
+      "cenario": "CAPEX AWE alto",
+      "alteracao": "capex_awe_usd_kw=1190.0",
+      "lcoh": 2.521,
+      "preferred": "NI",
+      "vuav": {
+        "NI": 90.8,
+        "H₂V": -2.1,
+        "BESS": -248.6
+      }
+    },
+    {
+      "cenario": "LCOH com logística",
+      "alteracao": "custo_logistico_usd_kg=0.55",
+      "lcoh": 2.5,
+      "preferred": "NI",
+      "vuav": {
+        "NI": 50.0,
+        "H₂V": -0.0,
+        "BESS": -248.6
+      }
+    },
+    {
+      "cenario": "LCOS BESS cai (~2030)",
+      "alteracao": "lcos_usd_mwh=92.0",
+      "lcoh": 1.95,
+      "preferred": "H₂V",
+      "vuav": {
+        "H₂V": 54.6,
+        "NI": 50.0,
+        "BESS": 0.0
+      }
+    },
+    {
+      "cenario": "FC reduzido (PDE 2035)",
+      "alteracao": "fc=0.34",
+      "lcoh": 3.021,
+      "preferred": "NI",
+      "vuav": {
+        "NI": 82.0,
+        "H₂V": -29.6,
+        "BESS": -142.1
+      }
+    },
+    {
+      "cenario": "PLD alto (escassez hídrica)",
+      "alteracao": "pld_arbitragem_usd_mwh=200.0",
+      "lcoh": 1.95,
+      "preferred": "BESS",
+      "vuav": {
+        "BESS": 258.0,
+        "H₂V": 54.6,
+        "NI": 50.0
+      }
+    }
+  ],
+  "diagnostico_lcoh": {
+    "lcoh_tabela2_usd_kg": 1.95,
+    "lcoh_analitico_capex_opex_usd_kg": 1.4281,
+    "residual_delta_usd_kg": 0.5219,
+    "curva_fig10_em_fc_0595": 1.4281,
+    "fc_paridade": {
+      "curva_fig10_publicada": 0.34,
+      "analytic_residual": 0.4296,
+      "proportional": 0.4641
+    },
+    "capex_paridade_usd_kw": {
+      "publicado_tabela5": 1190.0,
+      "analytic_residual": 1177.36,
+      "proportional": 1089.74
+    },
+    "lcoh_em_capex_1190": {
+      "publicado_tabela5": 2.73,
+      "analytic_residual": 2.5212,
+      "proportional": 2.73
+    }
+  },
+  "consistencia": {
+    "classes": 89,
+    "individuals": 68,
+    "properties": 35,
+    "consistent": true,
+    "unsatisfiable": [],
+    "reasoner": "HermiT",
+    "error": null
+  },
+  "refinamento_ni": {
+    "found": true,
+    "insatisfazivel": false,
+    "n_restricoes_existenciais": 4,
+    "restricoes": [
+      "cover.hasCapability.some(side.FinancialFlexibilityCapability)",
+      "cover.hasCapability.some(side.TechLockInAvoidanceCapability)",
+      "cover.hasCapability.some(side.RegulatoryRiskAvoidanceCapability)",
+      "cover.hasVulnerability.some(side.OpportunityCostVulnerability)"
+    ],
+    "n_instancias": 1
+  },
+  "validacao": {
+    "horas_ativas_ano": {
+      "publicado": 5212.0,
+      "obtido": 5212.2,
+      "unidade": "h/ano"
+    },
+    "ciclos_ano": {
+      "publicado": 1303.0,
+      "obtido": 1303.05,
+      "unidade": "ciclos/ano"
+    },
+    "producao_h2_t": {
+      "publicado": 99300.0,
+      "obtido": 99280.0,
+      "unidade": "tH2/ano"
+    },
+    "energia_bess_mwh": {
+      "publicado": 4690800.0,
+      "obtido": 4690980.0,
+      "unidade": "MWh/ano"
+    },
+    "eta_impl": {
+      "publicado": 0.75,
+      "obtido": 0.7504761904761904,
+      "unidade": "—"
+    },
+    "receita_h2_musd": {
+      "publicado": 248.2,
+      "obtido": 248.2,
+      "unidade": "USD M/ano"
+    },
+    "custo_h2_musd": {
+      "publicado": 193.6,
+      "obtido": 193.596,
+      "unidade": "USD M/ano"
+    },
+    "receita_bess_musd": {
+      "publicado": 431.6,
+      "obtido": 431.57016,
+      "unidade": "USD M/ano"
+    },
+    "custo_bess_musd": {
+      "publicado": 680.2,
+      "obtido": 680.1921,
+      "unidade": "USD M/ano"
+    },
+    "vuav_h2v_musd": {
+      "publicado": 54.6,
+      "obtido": 54.604,
+      "unidade": "USD M/ano"
+    },
+    "vuav_bess_musd": {
+      "publicado": -248.6,
+      "obtido": -248.62194,
+      "unidade": "USD M/ano"
+    },
+    "limiar_capex_usd_kw": {
+      "publicado": 1190.0,
+      "obtido": 1177.3622,
+      "unidade": "USD/kW"
+    },
+    "limiar_clog_usd_kg": {
+      "publicado": 0.55,
+      "obtido": 0.55,
+      "unidade": "USD/kgH2"
+    },
+    "limiar_pld_usd_mwh": {
+      "publicado": 145.0,
+      "obtido": 145.0,
+      "unidade": "USD/MWh"
+    },
+    "limiar_lcos_usd_mwh": {
+      "publicado": 92.0,
+      "obtido": 92.0,
+      "unidade": "USD/MWh"
+    },
+    "limiar_fc": {
+      "publicado": 0.34,
+      "obtido": 0.4296,
+      "unidade": "—"
+    }
+  }
+}
