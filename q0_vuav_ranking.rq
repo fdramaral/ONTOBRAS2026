@@ -1,0 +1,12 @@
+# ---------------------------------------------------------------------------
+# Q0 — Recuperação e ordenação das alternativas por VUAV.
+# Reproduz a Figura 6 do artigo ONTOBRAS/WTDO 2026. A primeira linha do
+# resultado é a Preferred Bearer; as demais são Deprecated Bearers.
+# ---------------------------------------------------------------------------
+SELECT ?strategy ?vuav WHERE {
+  ?d cover:mediates ?strategy ;
+     side:hasVUAV [ cover:hasValue ?vuav ] ;
+     cover:isGroundedIn [ side:hasContext side:RioGrandeDoNorte_2025 ] .
+  ?strategy a/rdfs:subClassOf* side:EnergyStrategy .
+}
+ORDER BY DESC(?vuav)

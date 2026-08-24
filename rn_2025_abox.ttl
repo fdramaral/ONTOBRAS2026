@@ -1,0 +1,574 @@
+@prefix cover: <http://purl.org/side/cover#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix side: <http://purl.org/side/energy#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+side:rn_2025_feasibility_study a side:FeasibilityStudy,
+        owl:NamedIndividual ;
+    rdfs:label "Estudo de viabilidade RN 2025"@pt ;
+    side:hasContext side:RioGrandeDoNorte_2025 ;
+    side:qualifies side:tm_capacidade_instalada,
+        side:tm_capex_awe_850,
+        side:tm_capex_bess_320,
+        side:tm_ciclos_ano,
+        side:tm_coff_eolico,
+        side:tm_custo_logistico,
+        side:tm_distancia_pecem,
+        side:tm_eta_impl,
+        side:tm_eta_rt_090,
+        side:tm_fc_595,
+        side:tm_fcr_1468,
+        side:tm_horas_ativas,
+        side:tm_infra_portuaria,
+        side:tm_kappa_525,
+        side:tm_lcoh_195,
+        side:tm_lcos_145,
+        side:tm_mwmed_janelas,
+        side:tm_paridade_h2_250,
+        side:tm_pld_arbitragem_92,
+        side:tm_potencia_1000,
+        side:tm_wacc_012 .
+
+side:rn_bess_decision a side:EnergyInvestmentDecision,
+        owl:NamedIndividual ;
+    cover:isGroundedIn side:rn_2025_tmset ;
+    cover:mediates side:rn_bess_strategy,
+        side:rn_industrial_investor ;
+    cover:triggeredBy side:rn_bess_decision_trigger ;
+    side:hasVUAV side:rn_bess_decision_netusevalue .
+
+side:rn_h2v_decision a side:EnergyInvestmentDecision,
+        owl:NamedIndividual ;
+    cover:isGroundedIn side:rn_2025_tmset ;
+    cover:mediates side:rn_h2v_strategy,
+        side:rn_industrial_investor ;
+    cover:triggeredBy side:rn_h2v_decision_trigger ;
+    side:hasVUAV side:rn_h2v_decision_netusevalue .
+
+side:rn_ni_decision a side:EnergyInvestmentDecision,
+        owl:NamedIndividual ;
+    cover:isGroundedIn side:rn_2025_tmset ;
+    cover:mediates side:rn_industrial_investor,
+        side:rn_ni_strategy ;
+    cover:triggeredBy side:rn_ni_decision_trigger ;
+    side:hasVUAV side:rn_ni_decision_netusevalue .
+
+side:cap_energy_arbitrage a cover:Capability,
+        side:EnergyArbitrageCapability,
+        owl:NamedIndividual ;
+    rdfs:label "Absorção do excedente e reinjeção em períodos de escassez"@pt ;
+    cover:inheresIn side:rn_bess_strategy ;
+    cover:manifestsAs side:ge_arbitrage .
+
+side:cap_financial_flexibility a cover:Capability,
+        side:FinancialFlexibilityCapability,
+        owl:NamedIndividual ;
+    rdfs:label "Preservação de flexibilidade financeira"@pt ;
+    cover:inheresIn side:rn_ni_strategy ;
+    cover:manifestsAs side:ge_capex_preservation .
+
+side:cap_h2_production a cover:Capability,
+        side:H2ProductionCapability,
+        owl:NamedIndividual ;
+    rdfs:label "Conversão de energia excedente em H2 durante a CurtailmentWindow"@pt ;
+    cover:inheresIn side:rn_h2v_strategy ;
+    cover:manifestsAs side:ge_h2_production .
+
+side:cap_regulatory_avoidance a cover:Capability,
+        side:RegulatoryRiskAvoidanceCapability,
+        owl:NamedIndividual ;
+    rdfs:label "Evitação de risco regulatório"@pt ;
+    cover:inheresIn side:rn_ni_strategy ;
+    cover:manifestsAs side:ge_regulatory_avoidance .
+
+side:cap_techlockin_avoidance a cover:Capability,
+        side:TechLockInAvoidanceCapability,
+        owl:NamedIndividual ;
+    rdfs:label "Evitação de lock-in tecnológico"@pt ;
+    cover:inheresIn side:rn_ni_strategy ;
+    cover:manifestsAs side:ge_techlockin_avoidance .
+
+side:ge_capex_preservation a cover:GainEvent,
+        side:CapexPreservationGain,
+        owl:NamedIndividual ;
+    rdfs:label "Preservação de CAPEX — custo de oportunidade do capital não imobilizado"@pt ;
+    cover:hasImpact "102000000.0"^^xsd:float ;
+    cover:hasLikelihood "1.0"^^xsd:float ;
+    cover:impactsPositively side:int_fin_flex ;
+    side:groundedInTruthmaker side:tm_capex_awe_850,
+        side:tm_wacc_012 ;
+    side:occursIn side:rn_curtailment_window .
+
+side:ge_regulatory_avoidance a cover:GainEvent,
+        side:RegulatoryRiskAvoidanceGain,
+        owl:NamedIndividual ;
+    rdfs:label "Evitação de exposição a marco regulatório incipiente"@pt ;
+    cover:hasImpact "15000000.0"^^xsd:float ;
+    cover:hasLikelihood "0.5"^^xsd:float ;
+    cover:impactsPositively side:int_compliance ;
+    side:occursIn side:rn_curtailment_window .
+
+side:ge_techlockin_avoidance a cover:GainEvent,
+        side:TechLockInAvoidanceGain,
+        owl:NamedIndividual ;
+    rdfs:label "Evitação de lock-in tecnológico"@pt ;
+    cover:hasImpact "25000000.0"^^xsd:float ;
+    cover:hasLikelihood "0.6"^^xsd:float ;
+    cover:impactsPositively side:int_strat_flex ;
+    side:groundedInTruthmaker side:tm_capex_awe_850,
+        side:tm_capex_bess_320 ;
+    side:occursIn side:rn_curtailment_window .
+
+side:le_battery_degradation a cover:LossEvent,
+        side:BatteryDegradationLoss,
+        owl:NamedIndividual ;
+    rdfs:label "Custo nivelado de armazenamento sob alta ciclagem (LCOS × energia)"@pt ;
+    cover:hasLikelihood "1.0"^^xsd:float ;
+    cover:hasSeverity "680192100.0"^^xsd:float ;
+    cover:impactsNegatively side:int_low_cost ;
+    side:groundedInTruthmaker side:tm_capex_bess_320,
+        side:tm_ciclos_ano,
+        side:tm_lcos_145 ;
+    side:occursIn side:rn_curtailment_window .
+
+side:le_electrolyzer_cost a cover:LossEvent,
+        side:ElectrolyzerInvestmentCost,
+        owl:NamedIndividual ;
+    rdfs:label "Custo nivelado de produção de H2 (LCOH × produção)"@pt ;
+    cover:hasLikelihood "1.0"^^xsd:float ;
+    cover:hasSeverity "193596000.0"^^xsd:float ;
+    cover:impactsNegatively side:int_low_cost ;
+    side:groundedInTruthmaker side:tm_capex_awe_850,
+        side:tm_kappa_525,
+        side:tm_lcoh_195 ;
+    side:occursIn side:rn_curtailment_window .
+
+side:le_logistics a cover:LossEvent,
+        side:LogisticsLoss,
+        owl:NamedIndividual ;
+    rdfs:label "Custo de escoamento do H2 ao porto de exportação"@pt ;
+    cover:hasLikelihood "0.0"^^xsd:float ;
+    cover:hasSeverity "0.0"^^xsd:float ;
+    cover:impactsNegatively side:int_low_cost ;
+    side:groundedInTruthmaker side:tm_custo_logistico,
+        side:tm_distancia_pecem ;
+    side:occursIn side:rn_curtailment_window .
+
+side:le_revenue_opportunity a cover:LossEvent,
+        side:RevenueOpportunityLoss,
+        owl:NamedIndividual ;
+    rdfs:label "Receita não capturada nas janelas de constrained-off"@pt ;
+    cover:hasLikelihood "0.3"^^xsd:float ;
+    cover:hasSeverity "248200000.0"^^xsd:float ;
+    cover:impactsNegatively side:int_high_revenue ;
+    side:groundedInTruthmaker side:tm_coff_eolico,
+        side:tm_fc_595,
+        side:tm_horas_ativas ;
+    side:hasLikelihoodGrowthRate "0.05"^^xsd:float ;
+    side:occursIn side:rn_curtailment_window .
+
+side:rn_bess_decision_netusevalue a cover:NetUseValue,
+        owl:NamedIndividual ;
+    cover:hasUnit "USD/ano" ;
+    cover:hasValue "0.0"^^xsd:float .
+
+side:rn_bess_decision_trigger a cover:TriggerEvent,
+        side:CurtailmentWithBatteryInvestment,
+        owl:NamedIndividual ;
+    rdfs:label "Constrained-off com investimento em baterias"@pt ;
+    side:occursIn side:rn_curtailment_window .
+
+side:rn_h2v_decision_netusevalue a cover:NetUseValue,
+        owl:NamedIndividual ;
+    cover:hasUnit "USD/ano" ;
+    cover:hasValue "0.0"^^xsd:float .
+
+side:rn_h2v_decision_trigger a cover:TriggerEvent,
+        side:CurtailmentWithElectrolyzerInvestment,
+        owl:NamedIndividual ;
+    rdfs:label "Constrained-off com investimento em eletrolisador"@pt ;
+    side:occursIn side:rn_curtailment_window .
+
+side:rn_ni_decision_netusevalue a cover:NetUseValue,
+        owl:NamedIndividual ;
+    cover:hasUnit "USD/ano" ;
+    cover:hasValue "0.0"^^xsd:float .
+
+side:rn_ni_decision_trigger a cover:TriggerEvent,
+        side:CurtailmentWithNoInvestment,
+        owl:NamedIndividual ;
+    rdfs:label "Constrained-off sem investimento"@pt ;
+    side:occursIn side:rn_curtailment_window .
+
+side:vul_capex_intensity a cover:Vulnerability,
+        side:CapexIntensityVulnerability,
+        owl:NamedIndividual ;
+    rdfs:label "Imobilização de capital em ativo específico"@pt ;
+    cover:inheresIn side:rn_h2v_strategy ;
+    cover:isActivatedBy side:vul_capex_intensity_situation ;
+    cover:produces side:le_electrolyzer_cost ;
+    side:isActive true .
+
+side:vul_capex_intensity_situation a side:H2PriceInstability,
+        owl:NamedIndividual .
+
+side:vul_high_cycling a cover:Vulnerability,
+        side:HighCyclingDegradationVulnerability,
+        owl:NamedIndividual ;
+    rdfs:label "Degradação acelerada por alta ciclagem"@pt ;
+    cover:inheresIn side:rn_bess_strategy ;
+    cover:isActivatedBy side:vul_high_cycling_situation ;
+    cover:produces side:le_battery_degradation ;
+    side:isActive true .
+
+side:vul_high_cycling_situation a side:BatteryInvestmentNeed,
+        owl:NamedIndividual .
+
+side:vul_intermittent_curtailment a cover:Vulnerability,
+        side:IntermittentCurtailmentVulnerability,
+        owl:NamedIndividual ;
+    rdfs:label "Dependência do FC para a viabilidade econômica"@pt ;
+    cover:inheresIn side:rn_h2v_strategy ;
+    cover:isActivatedBy side:vul_intermittent_curtailment_situation ;
+    side:isActive false ;
+    side:threatens side:ge_h2_production .
+
+side:vul_intermittent_curtailment_situation a side:ElectrolyzerInvestmentNeed,
+        owl:NamedIndividual .
+
+side:vul_logistics_distance a cover:Vulnerability,
+        side:LogisticsDistanceVulnerability,
+        owl:NamedIndividual ;
+    rdfs:label "Distância e ausência de infraestrutura portuária de H2"@pt ;
+    cover:inheresIn side:rn_h2v_strategy ;
+    cover:produces side:le_logistics ;
+    side:isActive false .
+
+side:vul_low_pld_arbitrage a cover:Vulnerability,
+        side:LowPLDArbitrageVulnerability,
+        owl:NamedIndividual ;
+    rdfs:label "PLD de despacho insuficiente para cobrir o LCOS"@pt ;
+    cover:inheresIn side:rn_bess_strategy ;
+    side:isActive true ;
+    side:threatens side:ge_arbitrage .
+
+side:vul_opportunity_cost a cover:Vulnerability,
+        side:OpportunityCostVulnerability,
+        owl:NamedIndividual ;
+    rdfs:label "Custo de oportunidade das janelas não aproveitadas"@pt ;
+    cover:inheresIn side:rn_curtailment_window,
+        side:rn_ni_strategy ;
+    cover:isActivatedBy side:vul_opportunity_cost_situation ;
+    cover:produces side:le_revenue_opportunity ;
+    side:isActive true .
+
+side:vul_opportunity_cost_situation a side:GenerationCapacityConstrainedByCurtailment,
+        owl:NamedIndividual .
+
+side:ge_arbitrage a cover:GainEvent,
+        side:ArbitrageGain,
+        owl:NamedIndividual ;
+    rdfs:label "Receita de arbitragem de energia armazenada"@pt ;
+    cover:hasImpact "431570160.0"^^xsd:float ;
+    cover:hasLikelihood "1.0"^^xsd:float ;
+    cover:impactsPositively side:int_high_profit ;
+    side:groundedInTruthmaker side:tm_eta_rt_090,
+        side:tm_horas_ativas,
+        side:tm_pld_arbitragem_92 ;
+    side:occursIn side:rn_curtailment_window .
+
+side:ge_h2_production a cover:GainEvent,
+        side:H2ProductionGain,
+        owl:NamedIndividual ;
+    rdfs:label "Receita bruta de venda de H2 à paridade com o H2 cinza"@pt ;
+    cover:hasImpact "248200000.0"^^xsd:float ;
+    cover:hasLikelihood "1.0"^^xsd:float ;
+    cover:impactsPositively side:int_high_revenue ;
+    side:groundedInTruthmaker side:tm_fc_595,
+        side:tm_horas_ativas,
+        side:tm_kappa_525,
+        side:tm_paridade_h2_250,
+        side:tm_potencia_1000 ;
+    side:occursIn side:rn_curtailment_window .
+
+side:int_compliance a side:ComplianceCertaintyIntention,
+        owl:NamedIndividual .
+
+side:int_fin_flex a side:FinancialFlexibilityIntention,
+        owl:NamedIndividual .
+
+side:int_high_profit a side:HighProfitIntention,
+        owl:NamedIndividual .
+
+side:int_strat_flex a side:StrategicFlexibilityIntention,
+        owl:NamedIndividual .
+
+side:tm_capacidade_instalada a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Capacidade instalada eólica + solar"@pt ;
+    cover:hasUnit "MW" ;
+    cover:hasValue "11700.0"^^xsd:float ;
+    side:hasSourceCitation "ANEEL (2026)" ;
+    side:hasSymbol "C_inst" ;
+    side:isDerived false .
+
+side:tm_eta_impl a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Eficiência implícita do stack (HHV/κ)"@pt ;
+    cover:hasUnit "adimensional" ;
+    cover:hasValue "0.7505"^^xsd:float ;
+    side:derivationFormula "HHV_H2 / κ" ;
+    side:hasSourceCitation "IRENA (2020a)" ;
+    side:hasSymbol "η_impl" ;
+    side:isDerived true .
+
+side:tm_fcr_1468 a side:EconomicTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Fixed charge rate (WACC=12%, n=20)"@pt ;
+    cover:hasUnit "adimensional" ;
+    cover:hasValue "0.1468"^^xsd:float ;
+    side:derivationFormula "WACC(1+WACC)^n / ((1+WACC)^n − 1)" ;
+    side:hasSourceCitation "elaboração própria" ;
+    side:hasSymbol "FCR" ;
+    side:isDerived true .
+
+side:tm_infra_portuaria a side:SpatialTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Disponibilidade de infraestrutura portuária de H2"@pt ;
+    cover:hasUnit "booleano" ;
+    cover:hasValue "0.0"^^xsd:float ;
+    side:hasSourceCitation "Sedec-RN (2025)" ;
+    side:hasSymbol "I_porto" ;
+    side:isDerived false .
+
+side:tm_mwmed_janelas a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Potência média nas horas com corte"@pt ;
+    cover:hasUnit "MWmed" ;
+    cover:hasValue "1847.0"^^xsd:float ;
+    side:hasSourceCitation "ONS (2026a)" ;
+    side:hasSymbol "P_med" ;
+    side:isDerived false .
+
+side:RioGrandeDoNorte_2025 a side:DecisionContext,
+        owl:NamedIndividual ;
+    rdfs:label "Rio Grande do Norte, Abr/2024–Mar/2026"@pt .
+
+side:int_high_revenue a side:HighRevenueIntention,
+        owl:NamedIndividual .
+
+side:rn_2025_tmset a cover:TruthmakerSet,
+        owl:NamedIndividual ;
+    cover:hasMember side:tm_capacidade_instalada,
+        side:tm_capex_awe_850,
+        side:tm_capex_bess_320,
+        side:tm_ciclos_ano,
+        side:tm_coff_eolico,
+        side:tm_custo_logistico,
+        side:tm_distancia_pecem,
+        side:tm_eta_impl,
+        side:tm_eta_rt_090,
+        side:tm_fc_595,
+        side:tm_fcr_1468,
+        side:tm_horas_ativas,
+        side:tm_infra_portuaria,
+        side:tm_kappa_525,
+        side:tm_lcoh_195,
+        side:tm_lcos_145,
+        side:tm_mwmed_janelas,
+        side:tm_paridade_h2_250,
+        side:tm_pld_arbitragem_92,
+        side:tm_potencia_1000,
+        side:tm_wacc_012 ;
+    side:hasContext side:RioGrandeDoNorte_2025 .
+
+side:rn_industrial_investor a side:IndustrialInvestor,
+        owl:NamedIndividual ;
+    rdfs:label "Investidor industrial (RN)"@pt ;
+    cover:hasIntention side:int_compliance,
+        side:int_fin_flex,
+        side:int_high_profit,
+        side:int_high_revenue,
+        side:int_low_cost,
+        side:int_strat_flex .
+
+side:tm_ciclos_ano a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Ciclos completos por ano do BESS"@pt ;
+    cover:hasUnit "ciclos/ano" ;
+    cover:hasValue "1303.0"^^xsd:float ;
+    side:derivationFormula "h ÷ duração de descarga" ;
+    side:hasSourceCitation "Schmidt et al. (2017)" ;
+    side:hasSymbol "n_ciclos" ;
+    side:isDerived true .
+
+side:tm_coff_eolico a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Constrained-off eólico acumulado (24 meses)"@pt ;
+    cover:hasUnit "GWh" ;
+    cover:hasValue "18442.0"^^xsd:float ;
+    side:hasSourceCitation "ONS (2026a)" ;
+    side:hasSymbol "E_coff" ;
+    side:isDerived false .
+
+side:tm_custo_logistico a side:SpatialTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Custo logístico unitário de escoamento do H2"@pt ;
+    cover:hasUnit "USD/kgH2" ;
+    cover:hasValue "0.0"^^xsd:float ;
+    side:hasSourceCitation "IRENA (2019)" ;
+    side:hasSymbol "c_log" ;
+    side:isDerived false .
+
+side:tm_distancia_pecem a side:SpatialTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Distância ao porto de exportação (Pecém/CE)"@pt ;
+    cover:hasUnit "km" ;
+    cover:hasValue "250.0"^^xsd:float ;
+    side:hasSourceCitation "elaboração própria" ;
+    side:hasSymbol "d_porto" ;
+    side:isDerived false .
+
+side:tm_eta_rt_090 a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Eficiência round-trip do BESS"@pt ;
+    cover:hasUnit "adimensional" ;
+    cover:hasValue "0.9"^^xsd:float ;
+    side:hasSourceCitation "NREL (2023)" ;
+    side:hasSymbol "η_RT" ;
+    side:isDerived false .
+
+side:tm_lcoh_195 a side:EconomicTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Custo nivelado do hidrogênio (cenário S1)"@pt ;
+    cover:hasUnit "USD/kgH2" ;
+    cover:hasValue "1.95"^^xsd:float ;
+    side:hasSourceCitation "Amaral, Baião e Maçaira (2026)" ;
+    side:hasSymbol "LCOH" ;
+    side:isDerived false .
+
+side:tm_lcos_145 a side:EconomicTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Custo nivelado de armazenamento em alta ciclagem"@pt ;
+    cover:hasUnit "USD/MWh" ;
+    cover:hasValue "145.0"^^xsd:float ;
+    side:hasSourceCitation "Schmidt et al. (2017)" ;
+    side:hasSymbol "LCOS" ;
+    side:isDerived false .
+
+side:tm_paridade_h2_250 a side:EconomicTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Paridade com o H2 cinza"@pt ;
+    cover:hasUnit "USD/kgH2" ;
+    cover:hasValue "2.5"^^xsd:float ;
+    side:hasSourceCitation "IRENA (2020a)" ;
+    side:hasSymbol "P_H2" ;
+    side:isDerived false .
+
+side:tm_pld_arbitragem_92 a side:EconomicTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Benefício unitário de arbitragem"@pt ;
+    cover:hasUnit "USD/MWh" ;
+    cover:hasValue "92.0"^^xsd:float ;
+    side:hasSourceCitation "CCEE (2026)" ;
+    side:hasSymbol "PLD" ;
+    side:isDerived false .
+
+side:tm_potencia_1000 a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Capacidade sugerida do ativo"@pt ;
+    cover:hasUnit "MW" ;
+    cover:hasValue "1000.0"^^xsd:float ;
+    side:hasSourceCitation "elaboração própria" ;
+    side:hasSymbol "P" ;
+    side:isDerived false .
+
+side:tm_wacc_012 a side:EconomicTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Custo médio ponderado de capital"@pt ;
+    cover:hasUnit "adimensional" ;
+    cover:hasValue "0.12"^^xsd:float ;
+    side:hasSourceCitation "elaboração própria" ;
+    side:hasSymbol "WACC" ;
+    side:isDerived false .
+
+side:int_low_cost a side:LowCostIntention,
+        owl:NamedIndividual .
+
+side:rn_bess_strategy a side:BESSStrategy,
+        owl:NamedIndividual ;
+    rdfs:label "BESS 4.000 MWh (1.000 MW × 4 h)"@pt ;
+    cover:hasCapability side:cap_energy_arbitrage ;
+    cover:hasVulnerability side:vul_high_cycling,
+        side:vul_low_pld_arbitrage .
+
+side:tm_capex_bess_320 a side:EconomicTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "CAPEX unitário do BESS"@pt ;
+    cover:hasUnit "USD/kWh" ;
+    cover:hasValue "320.0"^^xsd:float ;
+    side:hasSourceCitation "NREL (2023)" ;
+    side:hasSymbol "CAPEX_BESS" ;
+    side:isDerived false .
+
+side:tm_kappa_525 a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Consumo específico do eletrolisador AWE"@pt ;
+    cover:hasUnit "kWh/kgH2" ;
+    cover:hasValue "52.5"^^xsd:float ;
+    side:hasSourceCitation "IRENA (2020a)" ;
+    side:hasSymbol "κ" ;
+    side:isDerived false .
+
+side:rn_h2v_strategy a side:H2VStrategy,
+        owl:NamedIndividual ;
+    rdfs:label "Hidrogênio verde 1.000 MW (AWE)"@pt ;
+    cover:hasCapability side:cap_h2_production ;
+    cover:hasVulnerability side:vul_capex_intensity,
+        side:vul_intermittent_curtailment,
+        side:vul_logistics_distance .
+
+side:rn_ni_strategy a side:NoInvestmentStrategy,
+        owl:NamedIndividual ;
+    rdfs:label "Não investir (RN 2025)"@pt ;
+    cover:hasCapability side:cap_financial_flexibility,
+        side:cap_regulatory_avoidance,
+        side:cap_techlockin_avoidance ;
+    cover:hasVulnerability side:vul_opportunity_cost .
+
+side:tm_capex_awe_850 a side:EconomicTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "CAPEX unitário do eletrolisador"@pt ;
+    cover:hasUnit "USD/kW" ;
+    cover:hasValue "850.0"^^xsd:float ;
+    side:hasSourceCitation "IRENA (2020a)" ;
+    side:hasSymbol "CAPEX_AWE" ;
+    side:isDerived false .
+
+side:tm_fc_595 a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Fator de capacidade de constrained-off"@pt ;
+    cover:hasUnit "adimensional" ;
+    cover:hasValue "0.595"^^xsd:float ;
+    side:hasSourceCitation "ONS (2026a); Amaral, Baião e Maçaira (2026)" ;
+    side:hasSymbol "FC" ;
+    side:isDerived false .
+
+side:tm_horas_ativas a side:TechnicalTruthmaker,
+        owl:NamedIndividual ;
+    rdfs:label "Horas de operação ativas por ano"@pt ;
+    cover:hasUnit "h/ano" ;
+    cover:hasValue "5212.2"^^xsd:float ;
+    side:derivationFormula "8760 × FC" ;
+    side:hasSourceCitation "ONS (2026a); Amaral, Baião e Maçaira (2026)" ;
+    side:hasSymbol "h" ;
+    side:isDerived true .
+
+side:rn_curtailment_window a side:CurtailmentWindow,
+        owl:NamedIndividual ;
+    rdfs:label "Janela de constrained-off RN 2024–2026"@pt ;
+    side:groundedInTruthmaker side:tm_fc_595,
+        side:tm_horas_ativas ;
+    side:hasContext side:RioGrandeDoNorte_2025 .
+

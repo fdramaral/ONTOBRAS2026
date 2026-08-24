@@ -1,0 +1,16 @@
+# ---------------------------------------------------------------------------
+# Q2 — QC1 (explicação direta):
+# "Por que a estratégia ?s foi selecionada como Preferred Bearer?"
+# Recupera a cadeia Capability -> Gain Event -> Intention e os truthmakers
+# que fundamentam o Gain Event.
+# ---------------------------------------------------------------------------
+SELECT ?capability ?gainEvent ?intention ?truthmaker ?symbol ?value ?unit WHERE {
+  ?s cover:hasCapability ?capability .
+  ?capability cover:manifestsAs ?gainEvent .
+  ?gainEvent cover:impactsPositively ?intention ;
+             side:groundedInTruthmaker ?truthmaker .
+  ?truthmaker side:hasSymbol ?symbol ;
+              cover:hasValue ?value ;
+              cover:hasUnit ?unit .
+}
+ORDER BY ?gainEvent ?symbol

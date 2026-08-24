@@ -1,0 +1,13 @@
+# ---------------------------------------------------------------------------
+# Q6 — Verificação do refinamento ontológico de NI (Seção 3.2).
+# Demonstra que NoInvestmentStrategy não é uma classe vazia: retorna suas
+# Capabilities, os Gain Events que manifestam e as Intentions impactadas.
+# ---------------------------------------------------------------------------
+SELECT ?capability ?gainEvent ?intention ?impact WHERE {
+  ?s a side:NoInvestmentStrategy ;
+     cover:hasCapability ?capability .
+  ?capability cover:manifestsAs ?gainEvent .
+  ?gainEvent cover:impactsPositively ?intention ;
+             cover:hasImpact ?impact .
+}
+ORDER BY DESC(?impact)

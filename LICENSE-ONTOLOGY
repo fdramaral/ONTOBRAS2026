@@ -1,0 +1,30 @@
+SIDE — extensão da COVeR para decisão de investimento em aproveitamento de
+constrained-off renovável
+
+Copyright (c) 2026 Francisco D. R. do Amaral, Mateus Peixoto,
+Fernanda Baião, Paula Maçaira
+
+Abrange: ontology/side_tbox.ttl, ontology/rn_2025_abox.ttl, queries/*.rq,
+out/side.owl, out/side_full.ttl e as figuras e tabelas em out/.
+
+Licenciado sob Creative Commons Attribution 4.0 International (CC BY 4.0).
+Texto integral: https://creativecommons.org/licenses/by/4.0/legalcode
+Resumo: https://creativecommons.org/licenses/by/4.0/deed.pt-br
+
+Você tem liberdade para compartilhar e adaptar este material, para qualquer
+finalidade, inclusive comercial, desde que atribua o crédito apropriado,
+forneça um link para a licença e indique se foram feitas alterações.
+
+Atribuição sugerida:
+
+  Amaral, F. D. R. do; Peixoto, M.; Baião, F.; Maçaira, P. (2026).
+  Modelagem Ontológica de Valor e Risco em Decisões de Investimento em
+  Energia: Uma Abordagem Baseada em COVeR e Explicabilidade Ontológica.
+  In: Proceedings of the 19th Seminar on Ontology Research in Brazil
+  (ONTOBRAS 2026), Vitória, ES, Brasil. Licenciado sob CC BY 4.0.
+
+Nota sobre obras de terceiros: a COVeR [Sales et al., 2018] e a UFO
+[Guizzardi et al., 2022] são ontologias de referência de terceiros. Os stubs
+de alinhamento sob os namespaces ufo: e cover: reproduzem apenas a taxonomia
+mínima necessária para ancorar a extensão SIDE e não substituem as fontes
+originais.

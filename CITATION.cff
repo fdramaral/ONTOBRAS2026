@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "Se você usar esta implementação, cite o artigo abaixo."
+title: "SIDE: implementação OWL 2 / RDF / SPARQL da extensão da COVeR para decisão de investimento em aproveitamento de constrained-off renovável"
+abstract: >-
+  Instanciação computacional do arcabouço ontológico descrito em Amaral,
+  Peixoto, Baião e Maçaira (ONTOBRAS/WTDO 2026). Contém a TBox OWL 2, a ABox do
+  contexto RN_2025, as consultas SPARQL, o motor de cálculo do VUAV e o
+  mecanismo de ontological unpacking com geração de contrafactuais.
+type: software
+authors:
+  - family-names: "Amaral"
+    given-names: "Francisco D. R. do"
+    orcid: "https://orcid.org/0009-0003-8538-3476"
+    affiliation: "Pontifícia Universidade Católica do Rio de Janeiro (PUC-Rio)"
+  - family-names: "Peixoto"
+    given-names: "Mateus"
+    orcid: "https://orcid.org/0009-0005-4081-6615"
+    affiliation: "Pontifícia Universidade Católica do Rio de Janeiro (PUC-Rio)"
+  - family-names: "Baião"
+    given-names: "Fernanda"
+    orcid: "https://orcid.org/0000-0001-7932-7134"
+    affiliation: "Pontifícia Universidade Católica do Rio de Janeiro (PUC-Rio)"
+  - family-names: "Maçaira"
+    given-names: "Paula"
+    orcid: "https://orcid.org/0000-0001-6235-8006"
+    affiliation: "Pontifícia Universidade Católica do Rio de Janeiro (PUC-Rio)"
+keywords: ["COVeR", "UFO", "OntoUML", "ontological unpacking", "OWL 2", "SPARQL",
+           "constrained-off", "hidrogênio verde", "BESS"]
+license:
+  - MIT
+  - CC-BY-4.0
+license-url: "https://github.com/ORG/REPO/blob/main/LICENSE"
+version: "1.0.0"
+preferred-citation:
+  type: conference-paper
+  title: "Modelagem Ontológica de Valor e Risco em Decisões de Investimento em Energia: Uma Abordagem Baseada em COVeR e Explicabilidade Ontológica"
+  collection-title: "Proceedings of the 19th Seminar on Ontology Research in Brazil (ONTOBRAS 2026) and 10th Doctoral and Masters Consortium on Ontologies (WTDO 2026)"
+  year: 2026
+  location:
+    name: "Vitória, ES, Brasil"
+  authors:
+    - family-names: "Amaral"
+      given-names: "Francisco D. R. do"
+    - family-names: "Peixoto"
+      given-names: "Mateus"
+    - family-names: "Baião"
+      given-names: "Fernanda"
+    - family-names: "Maçaira"
+      given-names: "Paula"
